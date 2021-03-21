@@ -4,10 +4,12 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Collections;
+import java.util.PriorityQueue;
 
 public class BallPanel extends JPanel {
     private int delay = 10;
-    private ArrayList<Ball> list = new ArrayList<Ball>();
+    private ArrayList<Ball> list = new ArrayList<>();
     // Create a timer with the initial delay
     protected Timer timer = new Timer(delay, new TimerListener());
 
@@ -23,15 +25,21 @@ public class BallPanel extends JPanel {
     }
 
     public void add() {
-        list.add(new Ball());
+        list.add(new Ball((int) (Math.random()*18 + 2)));
     }
 
     public void subtract() {
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int i=-1;
+        for(Ball b: list){
+            pq.add(new Pair(b.radius, ++i));
+        }
         if (list.size() > 0)
-            list.remove(list.size() - 1); // Remove the last ball
+            list.remove(pq.poll().getB()); // Remove the last ball
     }
 
     public void mouseClicked(int mx, int my){
+        System.out.println(mx+ " "  + my);
         for(int i=0;i<list.size();++i){
             int x = list.get(i).x;
             int y = list.get(i).y;
